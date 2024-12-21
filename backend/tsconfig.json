@@ -1,0 +1,23 @@
+/* {
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "./dist",
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "lib": ["esnext"],
+    "allowJs": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**.ts",
+    "src/Users/Users.router.src/Users/Users.tsers.ts",
+    "src/Users/Users.router.js",
+    "src/Users/Users.js",
+    "src/FamilyObject/familyObject.router.js",
+    "src/FamilyObject/familyObject.js",
+    "src/FamilyTree/FamilyTree.js",
+    "src/FamilyTree/FamilyTree.router.js"
+  ]
+} */
+

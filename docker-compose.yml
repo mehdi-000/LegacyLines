@@ -1,0 +1,72 @@
+version: '3'
+services:
+  mariadb:
+    image: 'mariadb:10'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - 'vwprog-mariadb:/var/lib/mysql'
+    networks:
+      - vwprog-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mariadb:mariadb
+    ports:
+      - "8000:80"
+    environment:
+      PMA_USER: "${DB_USER}"
+      PMA_PASSWORD: "${DB_PASSWORD}"
+      PMA_HOST: mariadb
+      PMA_ARBITRARY: 0
+    networks:
+      - vwprog-net
+  vwprg-backend:
+    build: backend/.
+    command: bash -c "npm install && npm run watch-backend && npm run generate-schema-prod"
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USER: '${DB_USER}'
+      DB_PASSWORD: '${DB_PASSWORD}'
+      DB_HOST: mariadb
+      DB_PORT: '${DB_PORT}'
+      DB_DATABASE: '${DB_DATABASE}'
+    volumes:
+      - ./backend/:/usr/src/app
+      - /usr/app/node_modules
+    networks:
+      - vwprog-net
+    depends_on:
+      - mariadb
+  vwprg-frontend:
+    image: node:16
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run watch-frontend"
+    ports:
+      - "80:4173"
+    environment:
+      VITE_BACKEND_URL: 'http://localhost:8080'
+    volumes:
+      - ./frontend/:/usr/src/app
+    networks:
+      - vwprog-net
+    depends_on:
+      - vwprg-backend
+networks:
+  vwprog-net:
+    driver: bridge
+volumes:
+  vwprog-mariadb:
+    driver: local

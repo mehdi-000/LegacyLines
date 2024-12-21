@@ -1,0 +1,16 @@
+.global-styles {
+  /* Your global styles here */
+  font-family: "Arial", sans-serif;
+  color: #333;
+  /* Add more styles as needed */
+}
+
+.text-h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  text-align: center;
+  color: #333;
+}

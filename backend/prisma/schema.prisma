@@ -1,0 +1,120 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AccessControl {
+  AccessID     String                   @id
+  FamilyTreeID Int
+  UserID       Int
+  AccessType   AccessControl_AccessType
+  FamilyTree   FamilyTree               @relation(fields: [FamilyTreeID], references: [FamilyTreeID], onUpdate: Restrict, map: "AccessControl_ibfk_2")
+  Users        Users                    @relation(fields: [UserID], references: [UserID], onUpdate: Restrict, map: "AccessControl_ibfk_3")
+
+  @@index([FamilyTreeID], map: "FamilyTreeID")
+  @@index([UserID], map: "UserID")
+}
+
+model FamilyTree {
+  FamilyTreeID  Int             @id @default(autoincrement())
+  OwnerUserID   Int
+  Name          String          @db.VarChar(255)
+  Describtion   String          @db.Text
+  CreationDate  DateTime        @db.DateTime(0)
+  IsPublic      Boolean
+  NodePosition  String?         @db.Text
+  AccessControl AccessControl[]
+  Users         Users           @relation(fields: [OwnerUserID], references: [UserID], onUpdate: Restrict, map: "FamilyTree_ibfk_1")
+  Persons       Persons[]
+
+  @@index([OwnerUserID], map: "OwnerUserID")
+}
+
+model Messages {
+  MessageID                        Int      @id @default(autoincrement())
+  MessageContent                   String   @db.Text
+  SenderID                         Int
+  ReceiverID                       Int
+  Timestamp                        DateTime @db.DateTime(0)
+  isRead                           Boolean?
+  Users_Messages_MessageIDToUsers  Users    @relation("Messages_MessageIDToUsers", fields: [MessageID], references: [UserID], onUpdate: Restrict, map: "Messages_ibfk_1")
+  Users_Messages_ReceiverIDToUsers Users    @relation("Messages_ReceiverIDToUsers", fields: [ReceiverID], references: [UserID], onUpdate: Restrict, map: "Messages_ibfk_2")
+  Users_Messages_SenderIDToUsers   Users    @relation("Messages_SenderIDToUsers", fields: [SenderID], references: [UserID], onUpdate: Restrict, map: "Messages_ibfk_3")
+
+  @@index([ReceiverID], map: "ReceiverID")
+  @@index([SenderID], map: "SenderID")
+}
+
+model Relationsships {
+  RelationshipID                              Int                              @id @default(autoincrement())
+  Relationship_type                           Relationsships_Relationship_type
+  StartDate                                   DateTime?                        @db.Date
+  EndDate                                     DateTime?                        @db.Date
+  PersonOneID                                 Int?
+  PersonTwoID                                 Int?
+  Persons_Relationsships_PersonOneIDToPersons Persons?                         @relation("Relationsships_PersonOneIDToPersons", fields: [PersonOneID], references: [PersonID], onDelete: Restrict, onUpdate: Restrict, map: "FK_RelaPerson")
+  Persons_Relationsships_PersonTwoIDToPersons Persons?                         @relation("Relationsships_PersonTwoIDToPersons", fields: [PersonTwoID], references: [PersonID], onDelete: Restrict, onUpdate: Restrict, map: "FK_RelaPerson_2")
+
+  @@index([PersonOneID], map: "FK_RelaPerson")
+  @@index([PersonTwoID], map: "FK_RelaPerson_2")
+}
+
+model Users {
+  UserID                              Int                      @id @default(autoincrement())
+  Username                            String                   @db.VarChar(255)
+  Password                            String                   @db.VarChar(255)
+  Email                               String                   @unique @db.VarChar(255)
+  ProfilePicture                      Bytes?                   @db.Blob
+  CreationDate                        DateTime                 @db.DateTime(0)
+  LastLoginDate                       DateTime?                @db.DateTime(0)
+  IsActive                            Boolean?
+  ProfileVisibility                   Users_ProfileVisibility?
+  AccessControl                       AccessControl[]
+  FamilyTree                          FamilyTree[]
+  Messages_Messages_MessageIDToUsers  Messages?                @relation("Messages_MessageIDToUsers")
+  Messages_Messages_ReceiverIDToUsers Messages[]               @relation("Messages_ReceiverIDToUsers")
+  Messages_Messages_SenderIDToUsers   Messages[]               @relation("Messages_SenderIDToUsers")
+}
+
+model Persons {
+  PersonID                                           Int              @id @default(autoincrement())
+  Firstname                                          String           @db.VarChar(30)
+  Lastname                                           String           @db.VarChar(30)
+  Gender                                             Persons_Gender
+  Hometown                                           String?          @db.VarChar(255)
+  BirthDate                                          DateTime         @db.DateTime(0)
+  DateofDeath                                        DateTime?        @db.DateTime(0)
+  ProfilePicture                                     Bytes?           @db.Blob
+  FamilyTreeID                                       Int?
+  FamilyTree                                         FamilyTree?      @relation(fields: [FamilyTreeID], references: [FamilyTreeID], onDelete: Restrict, onUpdate: Restrict, map: "Persons_ibfk_1")
+  Relationsships_Relationsships_PersonOneIDToPersons Relationsships[] @relation("Relationsships_PersonOneIDToPersons")
+  Relationsships_Relationsships_PersonTwoIDToPersons Relationsships[] @relation("Relationsships_PersonTwoIDToPersons")
+
+  @@index([FamilyTreeID], map: "FamilyTreeID")
+}
+
+enum Relationsships_Relationship_type {
+  Vater
+  Mutter
+}
+
+enum Persons_Gender {
+  M
+  W
+  D
+}
+
+enum AccessControl_AccessType {
+  view
+  edit
+}
+
+enum Users_ProfileVisibility {
+  view
+  edit
+}
