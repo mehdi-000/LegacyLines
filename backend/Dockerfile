@@ -1,7 +1,7 @@
 FROM node:22-alpine
 
 # Install bash
-RUN apk update && apk add bash
+RUN apk update && apk add bash && apk add --no-cache openssl
 
 # Create app directory
 WORKDIR /usr/src/app
