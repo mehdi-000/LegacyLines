@@ -18,6 +18,6 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-RUN npx prisma generate
 EXPOSE 8080
+RUN npx prisma generate
 CMD [ "npm", "start" ]
