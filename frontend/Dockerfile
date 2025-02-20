@@ -4,6 +4,8 @@ WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm install
 
+ARG BACKEND_URL=https://legacylines-backend.up.railway.app/
+ENV VITE_BACKEND_URL=$BACKEND_URL
 
 COPY . .
 RUN npm run build
