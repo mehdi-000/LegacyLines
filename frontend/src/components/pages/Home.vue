@@ -1,7 +1,3 @@
-<!--@author Thi Ha Trang Dinh - Homepage-->
-<!--  This page contains our hints using the website, Search and Create function for familytree-->
-<!--  User can also see hidden informations with expand-transition-->
-
 <script>
 import ApiServices from "../../service/services";
 import DisplayFamilyTree from "@/components/DisplayFamilyTree.vue";
@@ -382,7 +378,6 @@ export default {
             </v-window-item>
           </v-window>
         </v-scroll-y>
-        <!--   <v-divider></v-divider> -->
 
         <v-card-actions v-if="step > 1 && step < 4">
           <v-btn v-if="step > 1" variant="text" @click="step--"> Zurück</v-btn>
@@ -507,21 +502,22 @@ export default {
               </div>
             </div>
           </v-card-item>
-          <v-card-actions>
-            <v-btn variant="text" @click="reveal = !reveal">
-              {{ reveal ? "Schließen" : "Weiterlesen" }}
-            </v-btn>
-          </v-card-actions>
 
           <v-expand-transition>
-            <v-card v-if="reveal" class="v-card--reveal" style="height: 100%">
+            <div v-show="reveal">
               <v-card-text class="pb-5">
                 <p>
                   - Sie müssen eingeloggt sein, um einen Stammbaum zu erstellen.
                 </p>
               </v-card-text>
-            </v-card>
+            </div>
           </v-expand-transition>
+
+          <v-card-actions>
+            <v-btn variant="text" @click="reveal = !reveal">
+              {{ reveal ? "Schließen" : "Weiterlesen" }}
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
 
@@ -539,19 +535,19 @@ export default {
               </div>
             </div>
           </v-card-item>
+
+          <v-expand-transition>
+            <div v-show="reveal1">
+              <v-card-text class="pb-5">
+                <p>- Fast geschafft</p>
+              </v-card-text>
+            </div>
+          </v-expand-transition>
           <v-card-actions>
             <v-btn variant="text" @click="reveal1 = !reveal1">
               {{ reveal1 ? "Schließen" : "Weiterlesen" }}
             </v-btn>
           </v-card-actions>
-
-          <v-expand-transition>
-            <v-card v-if="reveal1" class="v-card--reveal" style="height: 100%">
-              <v-card-text class="pb-5">
-                <p>- Fast geschafft</p>
-              </v-card-text>
-            </v-card>
-          </v-expand-transition>
         </v-card>
       </v-col>
 
@@ -571,14 +567,8 @@ export default {
             </div>
           </v-card-item>
 
-          <v-card-actions>
-            <v-btn variant="text" @click="reveal2 = !reveal2">
-              {{ reveal2 ? "Schließen" : "Weiterlesen" }}
-            </v-btn>
-          </v-card-actions>
-
           <v-expand-transition>
-            <v-card v-if="reveal2" class="v-card--reveal" style="height: 100%">
+            <div v-show="reveal2">
               <v-card-text class="pb-5">
                 <p>
                   - Rufen Sie Ihre Profilseite oder Stammbauminformationen auf!
@@ -587,8 +577,13 @@ export default {
                   - Sie müssen eingeloggt sein, um Beziehungen zu speichern!
                 </p>
               </v-card-text>
-            </v-card>
+            </div>
           </v-expand-transition>
+          <v-card-actions>
+            <v-btn variant="text" @click="reveal2 = !reveal2">
+              {{ reveal2 ? "Schließen" : "Weiterlesen" }}
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>

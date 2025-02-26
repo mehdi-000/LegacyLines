@@ -1,7 +1,3 @@
-<!-- @author Mehdi Popal
-This component isdefining the behavior of a family tree visualization. 
-The family tree is displayed using the Vue Flow library -->
-
 <script setup>
 import { h, ref } from "vue";
 import { Background } from "@vue-flow/background";

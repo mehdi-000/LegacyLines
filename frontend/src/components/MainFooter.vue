@@ -1,7 +1,3 @@
-<!-- 
-@author Mehdi Popal
-Footer component
- -->
 <template>
   <v-footer color="primary" height="auto" class="secondary d-flex flex-column">
     <!-- Social Media Icons -->

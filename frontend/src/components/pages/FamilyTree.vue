@@ -1,5 +1,3 @@
-<!--@author Mehdi Popal -->
-<!-- This page shows the  -->
 <template>
   <!-- Main container for the Familytree component -->
   <div>

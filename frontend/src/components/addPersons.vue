@@ -1,5 +1,3 @@
-<!-- @author Mehdi Popal
-Component to add a new person to the family tree. -->
 <template>
   <v-container>
     <!-- Form title and subtitle -->
