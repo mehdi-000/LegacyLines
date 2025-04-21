@@ -75,7 +75,7 @@ app.use(
 
 app.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyAkvA4gjTBrfCNBJ64OXw_w4cbFjBIvpoY",
+    key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: "places",
   },
 });
