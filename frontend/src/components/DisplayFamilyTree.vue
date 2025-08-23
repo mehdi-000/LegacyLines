@@ -309,10 +309,10 @@ const formatBirthdate = (birthdate) => {
 <template>
   <div class="d-flex">
     <v-card-subtitle class="mr-auto text-left"
-      >Name: {{ flowKey }}</v-card-subtitle
+      >Family Name: {{ flowKey }}</v-card-subtitle
     >
     <v-card-subtitle class="ml-auto text-right">
-      Ersteller: {{ Owner }}
+      Created by: {{ Owner }}
     </v-card-subtitle>
   </div>
   <!--  Loading animation -->
@@ -344,46 +344,44 @@ const formatBirthdate = (birthdate) => {
     -->
     <v-dialog v-model="showAdditionalInfoDialog" max-width="600">
       <v-card>
-        <v-card-title>Zusätzliche Informationen</v-card-title>
+        <v-card-title>Additional Information</v-card-title>
         <v-card-text>
           <v-list>
             <v-list-item>
-              <v-list-item-content>
-                <v-row>
-                  <v-col>
-                    <v-list-item-title>Vorname:</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      selectedNode.Firstname
-                    }}</v-list-item-subtitle>
-                  </v-col>
-                  <v-col>
-                    <v-list-item-title>Nachname:</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      selectedNode.Lastname
-                    }}</v-list-item-subtitle>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-list-item-title>Geburtsdatum:</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      formatBirthdate(selectedNode.BirthDate)
-                    }}</v-list-item-subtitle>
-                  </v-col>
-                </v-row>
-              </v-list-item-content>
+              <v-row>
+                <v-col>
+                  <v-list-item-title>First Name:</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    selectedNode.Firstname
+                  }}</v-list-item-subtitle>
+                </v-col>
+                <v-col>
+                  <v-list-item-title>Last Name:</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    selectedNode.Lastname
+                  }}</v-list-item-subtitle>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-list-item-title>Birth Date:</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    formatBirthdate(selectedNode.BirthDate)
+                  }}</v-list-item-subtitle>
+                </v-col>
+              </v-row>
             </v-list-item>
           </v-list>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="showAdditionalInfoDialog = false">Schließen</v-btn>
+          <v-btn @click="showAdditionalInfoDialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-alert v-if="errors" type="error">
-      Fehler beim Laden der Daten. Kein Bearbeitungszugriff vorhanden. Tritt dem
-      Stammbaum bei oder versuche es erneut.
+      Error loading data. No edit access available. Join the family tree or try
+      again.
     </v-alert>
   </v-skeleton-loader>
 </template>

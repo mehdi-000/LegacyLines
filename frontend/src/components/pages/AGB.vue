@@ -1,83 +1,39 @@
 <template>
-  <v-container class="agb-container">
-    <v-row>
-      <v-col>
-        <v-card class="agb-content">
-          <v-card-title>
-            <h1>Allgemeine Geschäftsbedingungen (AGB)</h1>
-          </v-card-title>
+  <v-container class="legal-container" fluid>
+    <v-row justify="center">
+      <v-col cols="12" md="8" lg="6">
+        <v-card class="pa-6 legal-card" elevation="3" rounded="xl">
+          <v-card-title class="text-h4 font-weight-bold mb-4"
+            >Terms and Conditions</v-card-title
+          >
+          <v-card-text class="text-body-1">
+            <div v-for="(section, i) in agbSections" :key="i" class="mb-6">
+              <h2 class="text-h6 font-weight-medium mb-2">
+                {{ section.title }}
+              </h2>
+              <p>{{ section.text }}</p>
+            </div>
+          </v-card-text>
+        </v-card>
 
-          <v-card-text>
-            <v-row>
-              <v-col>
-                <v-divider></v-divider>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <h2>1. Geltungsbereich</h2>
-                <p>
-                  Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle
-                  Verträge, Lieferungen und Leistungen zwischen [Ihr
-                  Unternehmen] und seinen Kunden.
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <h2>2. Vertragsabschluss</h2>
-                <p>
-                  Der Vertrag kommt zustande, sobald der Kunde eine Bestellung
-                  auf unserer Website aufgibt und diese von uns bestätigt wird.
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <h2>3. Preise und Zahlungsbedingungen</h2>
-                <p>
-                  Die Preise für unsere Produkte und Dienstleistungen sind auf
-                  unserer Website angegeben. Die Zahlung erfolgt per
-                  [Zahlungsmethode].
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <h2>4. Lieferung</h2>
-                <p>
-                  Die Lieferung erfolgt innerhalb von [Lieferzeit]. Die
-                  Versandkosten sind in den Preisen nicht enthalten, es sei
-                  denn, dies ist ausdrücklich anders angegeben.
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <h2>5. Widerrufsrecht</h2>
-                <p>
-                  Sie haben das Recht, binnen [Widerrufsfrist] ohne Angabe von
-                  Gründen diesen Vertrag zu widerrufen. Nähere Informationen zum
-                  Widerrufsrecht finden Sie auf unserer Website.
-                </p>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <h2>6. Gewährleistung und Haftung</h2>
-                <p>
-                  Es gelten die gesetzlichen Gewährleistungsregelungen. Wir
-                  haften nicht für Schäden, die durch unsachgemäße Verwendung
-                  unserer Produkte entstehen.
-                </p>
-              </v-col>
-            </v-row>
+        <v-card class="pa-6 legal-card mt-10" elevation="3" rounded="xl">
+          <v-card-title class="text-h4 font-weight-bold mb-4"
+            >Privacy Policy</v-card-title
+          >
+          <v-card-text class="text-body-1">
+            <div
+              v-for="(section, i) in datenschutzSections"
+              :key="i"
+              class="mb-6"
+            >
+              <h2 class="text-h6 font-weight-medium mb-2">
+                {{ section.title }}
+              </h2>
+              <p v-if="section.text">{{ section.text }}</p>
+              <ul v-if="section.list" class="pl-4">
+                <li v-for="(item, j) in section.list" :key="j">– {{ item }}</li>
+              </ul>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -88,7 +44,77 @@
 <script>
 export default {
   name: "AGB",
+  data() {
+    return {
+      agbSections: [
+        {
+          title: "1. Scope of Application",
+          text: "These terms and conditions apply to the use of our platform, particularly for registered users who create family trees.",
+        },
+        {
+          title: "2. Registration",
+          text: "The use of certain features (e.g., creating family trees) requires registration with a valid email address.",
+        },
+        {
+          title: "3. Content in Family Trees",
+          text: "Users can enter names, birth dates, and locations. The responsibility for accuracy and lawful publication lies with the user.",
+        },
+        {
+          title: "4. Cancellation",
+          text: "You can delete your account at any time. Personal data will be handled in accordance with GDPR.",
+        },
+        {
+          title: "5. Liability",
+          text: "We assume no liability for content created by users.",
+        },
+      ],
+      datenschutzSections: [
+        {
+          title: "1. General",
+          text: "We protect your data in accordance with GDPR. This statement informs you about the nature, scope, and purpose of data collection.",
+        },
+        {
+          title: "2. Collected Data",
+          text: "When using our site, the following data is stored:",
+        },
+        {
+          title: "Server Log Data",
+          list: [
+            "IP address",
+            "Browser type and version",
+            "Time of request",
+            "Referrer URL",
+          ],
+        },
+        {
+          title: "3. User Data",
+          text: "When creating an account, we store your email address and, if applicable, voluntary information such as names or birth dates of entered persons.",
+        },
+        {
+          title: "4. Your Rights",
+          list: [
+            "Information",
+            "Correction",
+            "Deletion",
+            "Restriction",
+            "Objection",
+            "Data portability",
+          ],
+        },
+        { title: "5. Cookies", text: "This site does not use cookies." },
+        {
+          title: "6. Changes",
+          text: "We reserve the right to adjust this privacy policy. The current version is always valid.",
+        },
+      ],
+    };
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.legal-container {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+</style>

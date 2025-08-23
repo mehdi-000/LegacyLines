@@ -77,12 +77,12 @@ export default {
         name: "Home",
         path: "/",
       },
-      Stammbaum: {
-        name: "Stammbaum",
+      FamilyTree: {
+        name: "Family Tree",
         path: "/choosefamilytree",
       },
       Requests: {
-        name: "Anfragen",
+        name: "Requests",
         path: "/requests",
       },
       Login: {
@@ -112,7 +112,7 @@ export default {
 
       <!-- Navigation tabs -->
       <v-tabs class="navbar">
-        <v-tab :to="Stammbaum.path">{{ Stammbaum.name }} </v-tab>
+        <v-tab :to="FamilyTree.path">{{ FamilyTree.name }} </v-tab>
         <v-tab :to="Requests.path" v-if="authenStore.loggedIn"
           >{{ Requests.name }}
         </v-tab>

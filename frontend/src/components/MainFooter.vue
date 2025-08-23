@@ -32,9 +32,9 @@ export default {
   data: () => ({
     icons: ["mdi-facebook", "mdi-twitter", "mdi-linkedin", "mdi-instagram"],
     footerLinks: [
-      { path: "/Impressum", label: "Impressum" },
-      { path: "/AGB", label: "AGB" },
-      { path: "/Datenschutz", label: "Datenschutz" },
+      { path: "/Impressum", label: "Legal Notice" },
+      { path: "/AGB", label: "Terms & Conditions" },
+      { path: "/Datenschutz", label: "Privacy Policy" },
     ],
   }),
   methods: {

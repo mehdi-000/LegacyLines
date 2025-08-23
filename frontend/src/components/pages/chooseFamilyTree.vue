@@ -3,7 +3,7 @@
     <!-- Show family trees if user is authenticated -->
     <div v-if="AUTHENTICATED" class="text-xs-center">
       <v-row justify="center" class="mb-4">
-        <h1>Wähle einen Stammbaum</h1>
+        <h1>Choose a Family Tree</h1>
       </v-row>
 
       <!-- Display family trees using v-item-group -->
@@ -28,7 +28,7 @@
       <!-- Button to create a new family tree -->
       <v-row class="mt-4">
         <v-btn @click="this.$router.push('/')" type="submit" class="ml-auto">
-          Neu erstellen
+          Create New
         </v-btn>
       </v-row>
     </div>
@@ -36,7 +36,7 @@
     <!-- Show login message if user is not authenticated -->
     <div v-else class="text-xs-center mt-4">
       <v-row justify="center">
-        <h1>Bitte logge dich ein</h1>
+        <h1>Please log in</h1>
       </v-row>
     </div>
   </v-container>

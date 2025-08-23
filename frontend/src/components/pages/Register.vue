@@ -4,7 +4,7 @@
   <v-row justify="center">
     <v-col cols="6">
       <v-card color="surface" class="pa-6 mx-auto">
-        <v-card-title class="text-h5">Konto erstellen</v-card-title>
+        <v-card-title class="text-h5">Create Account</v-card-title>
 
         <v-card-item>
           <!-- Registration form fields -->
@@ -21,28 +21,28 @@
               prepend-inner-icon="mdi-lock"
               v-model="password"
               :rules="passwordRules"
-              label="Passwort"
+              label="Password"
               type="password"
             ></v-text-field>
             <v-text-field
               prepend-inner-icon="mdi-lock"
               v-model="confirmPassword"
               :rules="confirmPasswordRules"
-              label="Passwort bestätigen"
+              label="Confirm Password"
               type="password"
             ></v-text-field>
 
             <!-- Register button -->
             <v-btn @click="createAcount" type="submit" block class="mt-2"
-              >KONTO ERSTELLEN
+              >CREATE ACCOUNT
             </v-btn>
 
             <!-- Display error if registration fails -->
             <v-row v-if="registerFailed" class="mt-2">
               <v-col>
                 <v-alert type="error"
-                  >Registrierung fehlgeschlagen. Bitte verwende eine andere
-                  E-Mail-Adresse oder Benutzernamen.</v-alert
+                  >Registration failed. Please use a different email address or
+                  username.</v-alert
                 >
               </v-col>
             </v-row>
@@ -50,7 +50,7 @@
             <!-- Link to login page -->
             <v-row class="mt-2">
               <v-col>
-                Du hast bereits ein Konto?
+                Do you already have an account?
                 <span @click="redirectToLogin" class="text-h6 link">LOGIN</span>
               </v-col>
             </v-row>
@@ -70,20 +70,19 @@ export default {
     email: "",
     password: "",
     confirmPassword: "",
-    rules: [(value) => !!value || "Bitte gib einen Vornamen ein."],
+    rules: [(value) => !!value || "Please enter a first name."],
     emailRules: [
-      (value) => !!value || "Bitte gib eine E-Mail-Adresse ein.",
-      (value) => /.+@.+\..+/.test(value) || "Ungültige E-Mail-Adresse.",
+      (value) => !!value || "Please enter an email address.",
+      (value) => /.+@.+\..+/.test(value) || "Invalid email address.",
     ],
     passwordRules: [
-      (value) => !!value || "Bitte gib ein Passwort ein.",
+      (value) => !!value || "Please enter a password.",
       (value) =>
         (value && value.length >= 8) ||
-        "Das Passwort muss mindestens 8 Zeichen lang sein.",
+        "The password must be at least 8 characters long.",
     ],
     confirmPasswordRules: [
-      (value) =>
-        value === this.password || "Die Passwörter stimmen nicht überein.",
+      (value) => value === this.password || "The passwords do not match.",
     ],
     registerFailed: false,
   }),

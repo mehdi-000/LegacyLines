@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <!-- Form title and subtitle -->
-    <h1 class="text-center mb-1">Familienmitglieder</h1>
+    <h1 class="text-center mb-1">Family Members</h1>
     <v-card-subtitle class="text-center mb-3"
-      >Füge deine Verwandten hinzu!</v-card-subtitle
+      >Add your relatives!</v-card-subtitle
     >
 
     <!-- Form with input fields -->
@@ -13,7 +13,7 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="firstName"
-            label="Vorname"
+            label="First Name"
             required
           ></v-text-field>
         </v-col>
@@ -22,7 +22,7 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="lastName"
-            label="Nachname"
+            label="Last Name"
             required
           ></v-text-field>
         </v-col>
@@ -31,7 +31,7 @@
         <v-col cols="12" md="6">
           <v-text-field
             v-model="birthDate"
-            label="Geburtsdatum"
+            label="Birth Date"
             type="date"
             required
           ></v-text-field>
@@ -41,8 +41,8 @@
         <v-col cols="12" md="6">
           <v-select
             v-model="gender"
-            :items="['Weiblich', 'Männlich', 'Divers']"
-            label="Geschlecht"
+            :items="['Female', 'Male', 'Diverse']"
+            label="Gender"
             required
           ></v-select>
         </v-col>
@@ -57,20 +57,20 @@
 
       <!-- Submit button -->
       <v-spacer></v-spacer>
-      <v-btn type="submit" class="ml-auto">Erstellen</v-btn>
+      <v-btn type="submit" class="ml-auto">Create</v-btn>
 
       <!-- Success and failure messages -->
       <v-row v-if="submitSuccess" class="mt-2">
         <v-col>
           <v-alert type="success">
-            {{ firstName }} {{ lastName }} wurde erfolgreich hinzugefügt!
+            {{ firstName }} {{ lastName }} was successfully added!
           </v-alert>
         </v-col>
       </v-row>
       <v-row v-if="submitFailed" class="mt-2">
         <v-col>
           <v-alert type="error">
-            {{ firstName }} {{ lastName }} konnte nicht hinzugefügt werden!
+            {{ firstName }} {{ lastName }} could not be added!
           </v-alert>
         </v-col>
       </v-row>
@@ -119,9 +119,9 @@ export default {
     // Map gender to code
     mapGenderToCode(gender) {
       const genderMap = {
-        Weiblich: "W",
-        Männlich: "M",
-        Divers: "D",
+        Female: "W",
+        Male: "M",
+        Diverse: "D",
       };
       return genderMap[gender] || null;
     },
@@ -129,7 +129,11 @@ export default {
     // Handle form submission
     async submitForm() {
       this.$emit("reload-family-tree", true);
-
+      console.log("FirstName ", this.firstName);
+      console.log("LastName ", this.lastName);
+      console.log("BirthDate ", this.birthDate);
+      console.log("Gender ", this.mapGenderToCode(this.gender));
+      console.log("Hometown ", this.hometown);
       // API call to add a new person
       try {
         const response = await axios.post(
@@ -157,7 +161,7 @@ export default {
           this.firstName = "";
           this.lastName = "";
           this.birthDate = "";
-          this.gender = ["Weiblich", "Männlich", "Divers"];
+          this.gender = ["Female", "Male", "Diverse"];
           this.hometown = "";
         }, 2000);
       }

@@ -58,6 +58,7 @@ services:
       - "80:4173"
     environment:
       VITE_BACKEND_URL: "http://localhost:8080"
+      VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
     volumes:
       - ./frontend/:/usr/src/app
     networks:

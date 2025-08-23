@@ -8,9 +8,7 @@ import MainFooter from "@/components/MainFooter.vue";
     <MainNav></MainNav>
     <v-main class="align-center justify-center">
       <v-container fluid>
-        <v-fade-transition>
-          <router-view></router-view>
-        </v-fade-transition>
+        <router-view> </router-view>
       </v-container>
     </v-main>
 

@@ -1,53 +1,53 @@
 <template>
   <div class="datenschutz-container">
     <div class="datenschutz-content">
-      <h1>Datenschutz</h1>
+      <h1>Privacy Policy</h1>
       <p>
-        Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Die Erhebung und Verarbeitung Ihrer personenbezogenen Daten erfolgt unter Beachtung der geltenden datenschutzrechtlichen Vorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO).
+        We take the protection of your personal data very seriously. The collection and processing of your personal data is carried out in compliance with applicable data protection regulations, in particular the General Data Protection Regulation (GDPR).
       </p>
-      <h2>1. Information über die Datenerhebung</h2>
+      <h2>1. Information about data collection</h2>
       <p>
-        In dieser Datenschutzerklärung informieren wir Sie über die Erhebung personenbezogener Daten bei Nutzung unserer Website. Personenbezogene Daten sind alle Daten, die auf Sie persönlich beziehbar sind, z. B. Name, Adresse, E-Mail-Adressen, Nutzerverhalten.
+        In this privacy policy, we inform you about the collection of personal data when using our website. Personal data is all data that can be related to you personally, e.g., name, address, email addresses, user behavior.
       </p>
-      <h2>2. Ihre Rechte</h2>
+      <h2>2. Your rights</h2>
       <p>
-        Sie haben folgende Rechte hinsichtlich Ihrer bei uns gespeicherten personenbezogenen Daten:
+        You have the following rights regarding your personal data stored with us:
         <ul>
-          <li>Auskunftsrecht</li>
-          <li>Recht auf Berichtigung oder Löschung</li>
-          <li>Recht auf Einschränkung der Verarbeitung</li>
-          <li>Recht auf Widerspruch gegen die Verarbeitung</li>
-          <li>Recht auf Datenübertragbarkeit</li>
+          <li>Right to information</li>
+          <li>Right to correction or deletion</li>
+          <li>Right to restriction of processing</li>
+          <li>Right to object to processing</li>
+          <li>Right to data portability</li>
         </ul>
       </p>
-      <h2>3. Datenerfassung auf unserer Website</h2>
+      <h2>3. Data collection on our website</h2>
       <p>
-        Die Datenerfassung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.
+        Data collection on this website is carried out by the website operator. You can find their contact details in the legal notice of this website.
       </p>
       <h2>4. Cookies</h2>
       <p>
-        Unsere Internetseite verwendet teilweise so genannte Cookies. Cookies richten auf Ihrem Rechner keinen Schaden an und enthalten keine Viren. Cookies dienen dazu, unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen.
+        Our website partially uses so-called cookies. Cookies do not cause any damage to your computer and do not contain viruses. Cookies serve to make our offer more user-friendly, effective and secure.
       </p>
-      <h2>5. Server-Log-Dateien</h2>
+      <h2>5. Server log files</h2>
       <p>
-        Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind:
+        The provider of the pages automatically collects and stores information in so-called server log files, which your browser automatically transmits to us. These are:
         <ul>
-          <li>Browsertyp und Browserversion</li>
-          <li>verwendetes Betriebssystem</li>
+          <li>Browser type and browser version</li>
+          <li>Operating system used</li>
           <li>Referrer URL</li>
-          <li>Hostname des zugreifenden Rechners</li>
-          <li>Uhrzeit der Serveranfrage</li>
-          <li>IP-Adresse</li>
+          <li>Hostname of the accessing computer</li>
+          <li>Time of server request</li>
+          <li>IP address</li>
         </ul>
-        Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.
+        A combination of this data with other data sources is not carried out.
       </p>
-      <h2>6. Kontaktformular</h2>
+      <h2>6. Contact form</h2>
       <p>
-        Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.
+        If you send us inquiries via the contact form, your details from the inquiry form, including the contact details you provided there, will be stored by us for the purpose of processing the inquiry and in case of follow-up questions. We do not pass on this data without your consent.
       </p>
-      <h2>7. Änderungen dieser Datenschutzrichtlinien</h2>
+      <h2>7. Changes to these privacy policies</h2>
       <p>
-        Wir behalten uns das Recht vor, diese Datenschutzrichtlinien jederzeit mit Wirkung für die Zukunft zu ändern. Eine aktuelle Version ist stets auf der Website verfügbar. Bitte besuchen Sie die Website regelmäßig und informieren Sie sich über die geltenden Datenschutzrichtlinien.
+        We reserve the right to change these privacy policies at any time with effect for the future. A current version is always available on the website. Please visit the website regularly and inform yourself about the current privacy policies.
       </p>
     </div>
   </div>

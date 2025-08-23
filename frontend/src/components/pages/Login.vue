@@ -18,7 +18,7 @@
               prepend-inner-icon="mdi-lock"
               v-model="password"
               :rules="passwordRules"
-              label="Passwort"
+              label="Password"
               type="password"
             ></v-text-field>
 
@@ -29,8 +29,7 @@
             <v-row v-if="loginFailed" class="mt-2">
               <v-col>
                 <v-alert type="error"
-                  >Anmeldung fehlgeschlagen. Bitte überprüfe deine
-                  Anmeldeinformationen.</v-alert
+                  >Login failed. Please check your login information.</v-alert
                 >
               </v-col>
             </v-row>
@@ -38,9 +37,9 @@
             <!-- Link to registration page -->
             <v-row class="mt-2">
               <v-col>
-                Kein Konto?
+                No account?
                 <span @click="redirectToRegister" class="text-h6 link"
-                  >ERSTELL DIR EINES</span
+                  >CREATE ONE</span
                 >
               </v-col>
             </v-row>
@@ -60,14 +59,14 @@ export default {
     password: "",
     checkbox: false,
     emailRules: [
-      (value) => !!value || "Bitte gib eine E-Mail-Adresse ein.",
-      (value) => /.+@.+\..+/.test(value) || "Ungültige E-Mail-Adresse.",
+      (value) => !!value || "Please enter an email address.",
+      (value) => /.+@.+\..+/.test(value) || "Invalid email address.",
     ],
     passwordRules: [
-      (value) => !!value || "Bitte gib ein Passwort ein.",
+      (value) => !!value || "Please enter a password.",
       (value) =>
         (value && value.length >= 8) ||
-        "Das Passwort muss mindestens 8 Zeichen lang sein.",
+        "The password must be at least 8 characters long.",
     ],
     loginFailed: false,
   }),

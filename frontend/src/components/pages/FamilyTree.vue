@@ -2,14 +2,14 @@
   <!-- Main container for the Familytree component -->
   <div>
     <!-- Title and subtitle for the Familytree -->
-    <h1 class="text-center">Stammbaum</h1>
+    <h1 class="text-center">Family Tree</h1>
     <v-card-subtitle class="text-center mt--1"
-      >Deine Familiengeschichte im Überblick</v-card-subtitle
+      >Your family history at a glance</v-card-subtitle
     >
 
     <!-- Show a message and redirect if not authorized -->
     <v-container v-if="!isAuthorized">
-      <h1>Bitte logge dich ein!</h1>
+      <h1>Please log in!</h1>
       <span to="/login"></span>
     </v-container>
 

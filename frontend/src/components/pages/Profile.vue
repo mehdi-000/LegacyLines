@@ -1,44 +1,52 @@
 <template>
   <v-app>
     <v-container class="d-flex justify-center align-center">
-      <!-- Profil-Karte -->
+      <!-- Profile Card -->
       <v-card class="profile-card">
-        <v-card-title class="text-center"> <h1>Mein Profil</h1></v-card-title>
-        <!-- Layout für Benutzerinformationen -->
+        <v-card-title class="text-center"> <h1>My Profile</h1></v-card-title>
+        <!-- Layout for user information -->
         <v-row>
           <v-col>
-            <!-- Überschrift für die Benutzerinformationen -->
-            <v-card-subtitle class="bInfo">Benutzerinformationen</v-card-subtitle>
-            <!-- Textfelder und Buttons für Benutzerdaten -->
+            <!-- Heading for user information -->
+            <v-card-subtitle class="bInfo">User Information</v-card-subtitle>
+            <!-- Text fields and buttons for user data -->
             <v-card-text>
-              <!-- Textfeld für den Benutzernamen -->
+              <!-- Text field for username -->
               <v-text-field
-                  v-model="userProfile.username"
-                  label="Username"
-                  class="narrow-text-field"
+                v-model="userProfile.username"
+                label="Username"
+                class="narrow-text-field"
               ></v-text-field>
-              <!-- Textfeld für das Passwort -->
+              <!-- Text field for password -->
               <v-text-field
-                  v-model="userProfile.password"
-                  label="ändere dein Passwort"
-                  class="narrow-text-field"
-                  type="password"
-                  :rules="passwordRules"
+                v-model="userProfile.password"
+                label="Change your password"
+                class="narrow-text-field"
+                type="password"
+                :rules="passwordRules"
               ></v-text-field>
-              <!-- Textfeld für die E-Mail-Adresse -->
+              <!-- Text field for email address -->
               <v-text-field
-                  v-model="userProfile.email"
-                  label="E-Mail"
-                  class="narrow-text-field"
+                v-model="userProfile.email"
+                label="E-Mail"
+                class="narrow-text-field"
               ></v-text-field>
-              <!-- Button zum Speichern der Daten -->
-              <v-btn @click="saveUserData">Speichern</v-btn>
-              <!-- Button zum Löschen des Benutzerkontos -->
-              <v-btn class="delete-button" @click="deleteUser">Benutzer löschen</v-btn>
+              <!-- Button to save data -->
+              <v-btn @click="saveUserData">Save</v-btn>
+              <!-- Button to delete user account -->
+              <v-btn class="delete-button" @click="deleteUser"
+                >Delete User</v-btn
+              >
               <!-- Alerts Feedback -->
-              <v-alert v-if="updatefailed" type="error" class="mt-2" dismissible>Fehler beim Speichern! Ändere deine Daten</v-alert>
-              <v-alert v-if="updated" type="success" class="mt-2" dismissible>Daten erfolgreich gespeichert</v-alert>
-              <v-alert v-if="deleted" type="success" class="mt-2" dismissible>Benutzer erfolgreich gelöscht</v-alert>
+              <v-alert v-if="updatefailed" type="error" class="mt-2" dismissible
+                >Error saving! Change your data</v-alert
+              >
+              <v-alert v-if="updated" type="success" class="mt-2" dismissible
+                >Data successfully saved</v-alert
+              >
+              <v-alert v-if="deleted" type="success" class="mt-2" dismissible
+                >User successfully deleted</v-alert
+              >
             </v-card-text>
           </v-col>
         </v-row>
@@ -49,131 +57,136 @@
 </template>
 
 <script>
-import axios from "axios"; // Importiert Axios für HTTP-Anfragen
+import axios from "axios"; // Imports Axios for HTTP requests
 
-// Backend-URL aus den Umgebungsvariablen
+// Backend URL from environment variables
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 export default {
-  name: "Profil",
-  // Definiert lokale Daten
+  name: "Profile",
+  // Defines local data
   data() {
     return {
-      // Passwort-Validierungsregeln
+      // Password validation rules
       passwordRules: [
-        (value) => !!value || "Bitte gib ein Passwort ein.",
-        (value) => (value && value.length >= 8) || "Dein neues Passwort muss mindestens 8 Zeichen lang sein.",
+        (value) => !!value || "Please enter a password.",
+        (value) =>
+          (value && value.length >= 8) ||
+          "Your new password must be at least 8 characters long.",
       ],
-      // Objekt zur Speicherung der Benutzerprofildaten
+      // Object for storing user profile data
       userProfile: {
         username: "",
         email: "",
         password: "",
         id: "",
       },
-      // Zustandsvariablen für verschiedene Benachrichtigungen
+      // State variables for various notifications
       updatefailed: false,
       updated: false,
       deleted: false,
     };
   },
-  // Hook, wird aufgerufen, wenn Komponente erstellt wird
+  // Hook called when component is created
   created() {
-    console.log("Profil component created");
-    this.loadUserData(); // Lädt Benutzerdaten beim Start
+    console.log("Profile component created");
+    this.loadUserData(); // Loads user data on start
   },
   computed: {
-    // Eigenschaft für die maskierte Passwortanzeige
+    // Property for masked password display
     maskedPassword() {
       return this.showPassword
-          ? this.userProfile.password
-          : "*".repeat(this.userProfile.password.length);
+        ? this.userProfile.password
+        : "*".repeat(this.userProfile.password.length);
     },
   },
   methods: {
-    // Lädt Benutzerdaten vom Server
+    // Loads user data from server
     async loadUserData() {
       axios
-          .get(`${backendURL}/users/yes/authenticate`, {
-            headers: {
-              Authorization: localStorage.getItem("token"), // Benutzt Token für Authentifizierung
-            },
-          })
-          .then((response) => {
-            console.log(response.data, "wss");
-            this.userProfile.id = response.data.user.id; // Setzt die Benutzer-ID
+        .get(`${backendURL}/users/yes/authenticate`, {
+          headers: {
+            Authorization: localStorage.getItem("token"), // Uses token for authentication
+          },
+        })
+        .then((response) => {
+          console.log(response.data, "wss");
+          this.userProfile.id = response.data.user.id; // Sets the user ID
 
-            // Weitere Anfrage, um Benutzerdaten zu laden
-            axios
-                .get(`${backendURL}/users/${this.userProfile.id}`)
-                .then((response) => {
-                  console.log(response.data, "user");
-                  // Aktualisiert das Benutzerprofil mit geladenen Daten
-                  this.userProfile.username = response.data.Username;
-                  this.userProfile.email = response.data.Email;
-                });
-          });
+          // Further request to load user data
+          axios
+            .get(`${backendURL}/users/${this.userProfile.id}`)
+            .then((response) => {
+              console.log(response.data, "user");
+              // Updates user profile with loaded data
+              this.userProfile.username = response.data.Username;
+              this.userProfile.email = response.data.Email;
+            });
+        });
     },
-    // Löscht Benutzerkonto
+    // Deletes user account
     async deleteUser() {
       try {
-        // Sendet Lösch-Anfrage an den Server
+        // Sends delete request to server
         const response = await axios.delete(
-            `${backendURL}/users/${this.userProfile.id}`
+          `${backendURL}/users/${this.userProfile.id}`
         );
-        console.log("Benutzerdaten erfolgreich gelöscht:", response.data);
+        console.log("User data successfully deleted:", response.data);
 
-        this.deleted = true; // Setzt den gelöscht Status
+        this.deleted = true; // Sets deleted status
         setTimeout(() => {
-          this.$router.push("/register"); // Navigiert zur Registrierungsseite
-          this.deleted = false; // Setzt den gelöscht Status zurück
+          this.$router.push("/register"); // Navigates to registration page
+          this.deleted = false; // Resets deleted status
         }, 2000);
       } catch (error) {
-        console.error("Fehler beim Löschen der Benutzerdaten:", error);
+        console.error("Error deleting user data:", error);
       }
     },
-    // Speichert die aktualisierten Benutzerdaten
+    // Saves updated user data
     async saveUserData() {
-      // Überprüft die Passwortlänge
+      // Checks password length
       if (
-          this.userProfile.password.length < 8 &&
-          this.userProfile.password.length > 1
+        this.userProfile.password.length < 8 &&
+        this.userProfile.password.length > 1
       ) {
-        this.updatefailed = true; // Setzt Fehlerstatus, wenn Passwort zu kurz ist
+        this.updatefailed = true; // Sets error status if password is too short
         setTimeout(() => {
           this.updatefailed = false;
         }, 2000);
         return;
       } else {
         try {
-          // Sendet Aktualisierungsanfrage an den Server
+          // Sends update request to server
           const response = await axios.put(
-              `${backendURL}/users/${this.userProfile.id}`,
-              {
-                Username: this.userProfile.username,
-                Password: this.userProfile.password,
-                Email: this.userProfile.email,
-              }
+            `${backendURL}/users/${this.userProfile.id}`,
+            {
+              Username: this.userProfile.username,
+              Password: this.userProfile.password,
+              Email: this.userProfile.email,
+            }
           );
 
-          // Überprüft die Serverantwort
+          // Checks server response
           if (response.data) {
-            console.log("Benutzerdaten erfolgreich aktualisiert:", response.data);
+            console.log("User data successfully updated:", response.data);
 
-            await this.loadUserData(); // Lädt Benutzerdaten neu
+            await this.loadUserData(); // Reloads user data
 
-            this.updated = true; // Setzt Erfolgsstatus
+            this.updated = true; // Sets success status
             setTimeout(() => {
-              this.updated = false; // Setzt Erfolgsstatus zurück
+              this.updated = false; // Resets success status
             }, 2000);
           } else {
-            console.error("Fehler beim Aktualisieren der Benutzerdaten: Ungültige Antwort", response);
+            console.error(
+              "Error updating user data: Invalid response",
+              response
+            );
           }
         } catch (error) {
-          console.error("Fehler beim Aktualisieren der Benutzerdaten:", error);
-          this.updatefailed = true; // Setzt Fehlerstatus bei einem Fehler
+          console.error("Error updating user data:", error);
+          this.updatefailed = true; // Sets error status on error
           setTimeout(() => {
-            this.updatefailed = false; // Setzt Fehlerstatus zurück
+            this.updatefailed = false; // Resets error status
           }, 2000);
         }
       }

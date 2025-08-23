@@ -9,6 +9,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import "@mdi/font/css/materialdesignicons.css";
+const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 // Import router
 import router from "./router";
@@ -75,7 +76,7 @@ app.use(
 
 app.use(VueGoogleMaps, {
   load: {
-    key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    key: mapsApiKey,
     libraries: "places",
   },
 });

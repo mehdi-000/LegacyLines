@@ -1,8 +1,7 @@
 <template>
-  <h1 class="text-center mt-7">Karte</h1>
+  <h1 class="text-center mt-7">Map</h1>
   <v-card-subtitle class="text-center mb-3"
-    >Verfolge die Spuren deiner Familie auf unserem interaktiven
-    Globus!</v-card-subtitle
+    >Track your family's traces on our interactive globe!</v-card-subtitle
   >
   <div :is="dynamicComponent" :key="dynamicComponentKey">
     <GMapMap
@@ -36,7 +35,7 @@
             :opened="openedMarkerID === m.id"
           >
             <div style="color: black">
-              Vorname: {{ m.firstname }} Nachname: {{ m.lastname }}
+              First Name: {{ m.firstname }} Last Name: {{ m.lastname }}
             </div>
           </GMapInfoWindow>
         </GMapMarker>

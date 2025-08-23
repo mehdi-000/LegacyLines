@@ -1,209 +1,244 @@
 <template>
-  <!--Hauptstruktur -->
   <v-app>
-    <!-- Hauptcontainer -->
     <v-container>
-      <!-- Inhalt, wenn Benutzer angemeldet -->
-      <div v-if="AUTHENTICATED" class="text-xs-center">
-        <!-- Karte für die Anzeige Familienmitglieder, wenn vorhanden-->
-        <v-card v-if="familyMembers.length > 0">
-          <h1 class="text-center mb-2">Familienmitglieder</h1>
-          <v-card-subtitle class="text-center mb-2">
-            Wähle eine Person aus, um die Beziehung zu einer anderen Person
-            festzulegen.
-          </v-card-subtitle>
-          <!-- Schleife Familienmitglieder -->
-          <v-row class="mb-4">
-            <v-col v-for="(person, index) in familyMembers" :key="index">
-              <!-- Details Person -->
-              <v-card class="person-card">
-                <v-card-title
-                  >{{ person.Firstname }} {{ person.Lastname }}</v-card-title
-                >
-                <v-card-subtitle>
-                  Geburtsdatum: {{ formatDate(person.BirthDate) }}<br />
-                  Geschlecht: {{ formatGender(person.Gender) }}<br />
-                </v-card-subtitle>
-                <!-- Beziehungen Kind -->
-                <v-card-subtitle v-if="childRelationships[person.PersonID]">
-                  <template
-                    v-for="relationship in childRelationships[person.PersonID]"
-                  >
-                    {{ relationship.Relationship_type }}:
-                    {{
-                      getPersonDetails(relationship.PersonTwoID) + " " || "N/A"
-                    }}
-                  </template>
-                </v-card-subtitle>
-                <!-- Button, um als Elternteil oder Kind auszuwählen -->
-                <v-btn @click="toggleSelect(person)" class="person-btn">
-                  {{ getButtonLabel(person) }}
-                </v-btn>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-card>
-        <!-- Anzeige für die ausgewählten Personen und Beziehungstypen -->
-        <v-card v-if="selectedPersons.length === 2" class="mb-5">
-          <v-card-title>Beziehung festlegen</v-card-title>
-          <v-card-subtitle class="relationship-subtitle">
-            {{ selectedPersons[1]?.Firstname }}
-            {{ selectedPersons[1]?.Lastname }} ist
-            {{ selectedRelationshipType }} von
-            {{ selectedPersons[0]?.Firstname || "N/A" }}
-            {{ selectedPersons[0]?.Lastname || "N/A" }}
-          </v-card-subtitle>
-          <v-btn v-if="edit" @click="addRelationship" class="small-btn"
-            >Zur Liste hinzufügen</v-btn
+      <div v-if="AUTHENTICATED">
+        <v-card class="mb-5">
+          <v-card-title class="text-h5 m-2"
+            >👨‍👩‍👧 Establish Family Relationships</v-card-title
           >
+          <v-card-subtitle>
+            1. Select a person as child<br />
+            2. Then another person as parent<br />
+            3. Choose the relationship type
+          </v-card-subtitle>
         </v-card>
-        <!-- Liste der ausgewählten Beziehungen -->
-        <v-card v-if="selectedRelationships.length > 0" class="mb-5">
-          <v-card-title>Ausgewählte Beziehungen</v-card-title>
-          <v-list>
-            <v-list-item-group v-if="selectedRelationships.length > 0">
-              <v-list-item
-                v-for="(relationship, index) in selectedRelationships"
-                :key="index"
+
+        <v-row>
+          <v-col
+            v-for="person in familyMembers"
+            :key="person.PersonID"
+            cols="12"
+            sm="6"
+            md="4"
+          >
+            <v-card
+              :elevation="selectedPersons.includes(person) ? 10 : 2"
+              class="pa-3"
+            >
+              <div class="text-h6 text-center">
+                {{ person.Firstname }} {{ person.Lastname }}
+              </div>
+              <div class="text-caption text-center">
+                Born: {{ formatDate(person.BirthDate) }}
+              </div>
+              <v-avatar size="64" class="mb-2"> </v-avatar>
+              <v-btn
+                color="secondary"
+                class="mt-2"
+                block
+                @click="selectPerson(person)"
+                :disabled="selectedPersons.includes(person)"
               >
-                <v-list-item-content>
-                  <v-list-item-title class="relationship-subtitle">
-                    {{ formatRelationship(relationship) }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-          <v-btn v-if="edit" @click="saveAllRelationships" class="small-btn"
-            >Alle Beziehungen speichern</v-btn
-          >
-        </v-card>
-        <!-- Dialog Auswahl Beziehungstyp -->
-        <v-dialog v-model="dialog" max-width="600" class="mb-5">
+                {{ getSelectionLabel() }}
+              </v-btn>
+            </v-card>
+          </v-col>
+        </v-row>
+
+        <!-- Dialog for relationship type -->
+        <v-dialog v-model="dialog" max-width="400">
           <v-card>
-            <v-card-title>Beziehung auswählen</v-card-title>
+            <v-card-title class="text-h6">Select Relationship</v-card-title>
             <v-card-text>
-              <!-- Beziehungstyps (Mutter/Vater) -->
-              <v-btn @click="selectMutter" class="small-btn">Mutter</v-btn>
-              <v-btn @click="selectVater" class="small-btn">Vater</v-btn>
+              <v-btn
+                block
+                color="secondary"
+                class="mb-2"
+                @click="selectRelationshipType('Mother')"
+                >Mother</v-btn
+              >
+              <v-btn
+                block
+                color="secondary"
+                @click="selectRelationshipType('Father')"
+                >Father</v-btn
+              >
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="dialog = false" class="small-btn">Abbrechen</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn text @click="cancelSelection">Cancel</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <!-- Show relationships -->
+        <v-card class="mt-5" v-if="selectedRelationships.length">
+          <v-card-title class="text-h6">Selected Relationships</v-card-title>
+          <v-card-text>
+            <v-chip
+              v-for="(rel, index) in selectedRelationships"
+              :key="index"
+              color="primary"
+              class="ma-1"
+              label
+            >
+              {{ rel.relationshipType }}: {{ rel.person2.Firstname }} →
+              {{ rel.person1.Firstname }}
+            </v-chip>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="success" @click="saveAllRelationships"
+              >Save All Relationships</v-btn
+            >
+          </v-card-actions>
+        </v-card>
       </div>
-      <!-- wenn Benutzer nicht angemeldet  -->
-      <div v-else class="text-xs-center mt-4">
-        <v-row justify="center">
-          <h1>Bitte logge dich ein</h1>
-        </v-row>
+
+      <!-- Not logged in -->
+      <div v-else class="text-center mt-5">
+        <h2>Please log in.</h2>
       </div>
     </v-container>
   </v-app>
 </template>
 
 <script>
-import axios from "axios"; // Axios für HTTP-Anfragen importieren
+import axios from "axios"; // Import Axios for HTTP requests
 
-const backendURL = import.meta.env.VITE_BACKEND_URL; // URL des Backends aus den Umgebungsvariablen
+const backendURL = import.meta.env.VITE_BACKEND_URL; // Backend URL from environment variables
 
 export default {
-  // Eigenschaften, die von außen (Elternkomponenten) übergeben werden
+  // Properties passed from outside (parent components)
   props: {
     FamilyTreeId: {
       type: Number,
-      required: true, // Stammbaum-ID, benötigt für Datenabrufe
+      required: true, // Family tree ID, needed for data retrieval
     },
     reloadFamilyTree: {
       type: Boolean,
-      required: true, // Signalisiert, ob der Stammbaum neu geladen werden soll
+      required: true, // Signals whether the family tree should be reloaded
     },
     reloadRelationships: {
       type: Boolean,
-      required: true, // Signalisiert, ob die Beziehungen neu geladen werden sollen
+      required: true, // Signals whether relationships should be reloaded
     },
     edit: {
       type: Boolean,
-      required: false, // Signalisiert, ob die Beziehungen bearbeitet werden können
+      required: false, // Signals whether relationships can be edited
       default: false,
     },
   },
 
-  // Lokale Daten der Komponente
+  // Local component data
   data() {
     return {
-      familyMembers: [], // Liste der Familienmitglieder
-      selectedPersons: [], // Ausgewählte Personen für Beziehungsfestlegung
-      selectedRelationshipType: "", // Art der ausgewählten Beziehung (z.B. Mutter, Vater)
-      selectedRelationships: [], // Liste ausgewählter Beziehungen
-      childRelationships: {}, // Beziehungen der Kinder (nach Kind-ID organisiert)
-      personSelectionState: "child", // Status der Personenauswahl (Kind oder Elternteil)
-      dialog: false, // Steuert, ob der Dialog angezeigt wird
-      AUTHENTICATED: false, // Authentifizierungsstatus
-      user: null, // Aktueller Benutzer
+      familyMembers: [], // List of family members
+      selectedPersons: [], // Selected persons for relationship establishment
+      selectedRelationshipType: "", // Type of selected relationship (e.g., Mother, Father)
+      selectedRelationships: [], // List of selected relationships
+      childRelationships: {}, // Child relationships (organized by child ID)
+      personSelectionState: "child", // Status of person selection (child or parent)
+      dialog: false, // Controls whether dialog is displayed
+      AUTHENTICATED: false, // Authentication status
+      user: null, // Current user
     };
   },
 
   async mounted() {
-    // wenn Komponente eingebunden
+    // when component is mounted
   },
 
   watch: {
     reloadRelationships(newValue, oldValue) {
       if (newValue !== oldValue) {
-        this.loadFamilyMembers(); // Lade Familienmitglieder neu, wenn Beziehungen sich ändern
+        this.loadFamilyMembers(); // Reload family members when relationships change
       }
     },
   },
 
-  // Wird aufgerufen, wenn die Komponente erstellt wird
+  // Called when component is created
   created() {
-    this.loadFamilyMembers(); // Lade Familienmitglieder beim Start
-    this.loadRelationships(); // Lade Beziehungen beim Start
-    this.authenticateUser(); // Überprüfe die Benutzerauthentifizierung
+    this.loadFamilyMembers(); // Load family members on start
+    this.loadRelationships(); // Load relationships on start
+    this.authenticateUser(); // Check user authentication
   },
 
   methods: {
-    // Authentifizierung des Benutzers
+    selectPerson(person) {
+      if (this.selectedPersons.length < 2) {
+        this.selectedPersons.push(person);
+        if (this.selectedPersons.length === 2) {
+          this.dialog = true;
+        }
+      }
+    },
+
+    getSelectionLabel() {
+      return this.selectedPersons.length === 0
+        ? "Select as Child"
+        : "Select as Parent";
+    },
+
+    selectRelationshipType(type) {
+      this.selectedRelationshipType = type;
+      this.addRelationship();
+      this.dialog = false;
+    },
+
+    cancelSelection() {
+      this.selectedPersons = [];
+      this.dialog = false;
+    },
+
+    addRelationship() {
+      this.selectedRelationships.push({
+        person1: this.selectedPersons[0], // Child
+        person2: this.selectedPersons[1], // Parent
+        relationshipType: this.selectedRelationshipType,
+      });
+      this.selectedPersons = [];
+      this.selectedRelationshipType = "";
+    },
+    // User authentication
     authenticateUser() {
       try {
         axios
           .get(`${backendURL}/users/yes/authenticate`, {
             headers: {
-              Authorization: localStorage.getItem("token"), // Benutze Token aus dem Local Storage für Authentifizierung
+              Authorization: localStorage.getItem("token"), // Use token from Local Storage for authentication
             },
           })
           .then((response) => {
-            this.AUTHENTICATED = true; // Setze authentifiziert auf true, wenn erfolgreich
-            this.user = response.data; // Speichere Benutzerdaten
+            this.AUTHENTICATED = true; // Set authenticated to true when successful
+            this.user = response.data; // Store user data
           });
       } catch (error) {
-        console.error("error ", error); // Fehlerbehandlung
+        console.error("error ", error); // Error handling
       }
     },
 
-    // Lädt die Familienmitglieder vom Server
+    // Loads family members from server
     async loadFamilyMembers() {
       try {
         const response = await axios.get(
           `${backendURL}/persons/familytree/${this.FamilyTreeId}`
-        ); // Anfrage an die API mit der Stammbaum-ID
-        this.familyMembers = response.data; // Speichert die Antwort in der familyMembers-Variable
+        ); // Request to API with family tree ID
+        this.familyMembers = response.data; // Stores response in familyMembers variable
       } catch (error) {
-        console.error("Error loading family members:", error); // Fehlermeldung, falls die Anfrage fehlschlägtt
+        console.error("Error loading family members:", error); // Error message if request fails
       }
     },
 
-    // Lädt die Beziehungen der Familienmitglieder
+    // Loads relationships of family members
     async loadRelationships() {
       try {
         const response = await axios.get(
           `${backendURL}/relationsships/familyTree/${this.FamilyTreeId}`
-        ); // Anfrage an die API
+        ); // Request to API
         const relationships = response.data;
 
-        // Organisiert die Beziehungen nach der ID des Kinds
+        // Organizes relationships by child ID
         this.childRelationships = relationships.reduce((acc, relationship) => {
           const childID = relationship.PersonOneID;
 
@@ -211,27 +246,27 @@ export default {
             acc[childID] = [];
           }
 
-          acc[childID].push(relationship); // Fügt die Beziehung zum entsprechenden Kind hinzu
+          acc[childID].push(relationship); // Adds relationship to corresponding child
           return acc;
         }, {});
       } catch (error) {
-        console.error("Error loading relationships:", error); // Fehlermeldung bei Fehlschlag
+        console.error("Error loading relationships:", error); // Error message on failure
       }
     },
 
-    //  Details einer Person anhand ID
+    //  Person details by ID
     getPersonDetails(personID) {
       const person = this.familyMembers.find((p) => p.PersonID === personID);
-      return person ? `${person.Firstname} ${person.Lastname}` : "N/A"; // Sucht Person in Liste der Familienmitglieder
+      return person ? `${person.Firstname} ${person.Lastname}` : "N/A"; // Searches person in family members list
     },
 
-    // Formatiert Beziehungsdaten für Anzeige
+    // Formats relationship data for display
     formatRelationship(relationship) {
       const child = relationship.person1;
       const parent = relationship.person2;
       const relationshipType = relationship.relationshipType;
 
-      // Gibt Beziehung formatiert zurück, abhängig vom Beziehungstyp
+      // Returns formatted relationship depending on relationship type
       if (relationshipType === "Vater" && parent) {
         return `${relationshipType}: ${parent.Firstname || "N/A"} ${
           parent.Lastname || "N/A"
@@ -241,39 +276,39 @@ export default {
           parent.Lastname || "N/A"
         }`;
       } else {
-        return "N/A"; // "N/A", falls keine Daten vorhanden
+        return "N/A"; // "N/A" if no data available
       }
     },
 
-    // Wechselt die Auswahl einer Person
+    // Toggles person selection
     toggleSelect(person) {
       if (this.selectedPersons.length < 2) {
-        this.selectedPersons.push(person); // Fügt die Person zur Auswahl hinzu, wenn noch nicht zwei Personen ausgewählt wurden
+        this.selectedPersons.push(person); // Adds person to selection if not yet two persons selected
       }
 
-      // Wechselt zwischen Kind- und Elternteil-Auswahl
+      // Switches between child and parent selection
       this.personSelectionState =
         this.personSelectionState === "child" ? "parent" : "child";
 
-      // Öffnet den Dialog zur Beziehungsauswahl, wenn zwei Personen ausgewählt wurden
+      // Opens dialog for relationship selection when two persons are selected
       if (
         this.selectedPersons.length === 2 &&
         this.personSelectionState === "parent"
       ) {
-        this.addRelationship(); // Fügt automatisch die Beziehung hinzu, wenn zwei Personen ausgewählt sind
+        this.addRelationship(); // Automatically adds relationship when two persons are selected
       } else if (this.selectedPersons.length === 2) {
-        this.dialog = true; // Öffnet Dialog
+        this.dialog = true; // Opens dialog
       }
     },
 
-    // BestimmLabel des Buttons basierend auf dem Auswahlstatus
+    // Button label based on selection status
     getButtonLabel(person) {
       return this.personSelectionState === "child"
-        ? "Als Kind auswählen"
-        : "Als Elternteil auswählen";
+        ? "Select as Child"
+        : "Select as Parent";
     },
 
-    // Fügt eine Beziehung zur Liste hinzu
+    // Adds a relationship to the list
     addRelationship() {
       this.selectedRelationships.push({
         person1: this.selectedPersons[0],
@@ -281,14 +316,14 @@ export default {
         relationshipType: this.selectedRelationshipType,
       });
 
-      this.resetSelections(); // Setzt die Auswahl zurück
+      this.resetSelections(); // Resets selection
     },
 
-    // Speichert alle ausgewählten Beziehungen
+    // Saves all selected relationships
     async saveAllRelationships() {
       console.log("Saving relationships:", this.selectedRelationships[0]);
       try {
-        // Sendet die ausgewählten Beziehungen an den Server
+        // Sends selected relationships to server
         const response = await axios.post(
           `${backendURL}/relationsships/${this.selectedRelationships[0].person1.PersonID}/${this.selectedRelationships[0].person2.PersonID}`,
           {
@@ -297,16 +332,16 @@ export default {
         );
 
         console.log("Saved relationships:", response.data);
-        this.$emit("reload-family-tree", true); // Signalisiert, dass der Stammbaum neu geladen werden soll
+        this.$emit("reload-family-tree", true); // Signals that family tree should be reloaded
 
-        // Leert die Liste der ausgewählten Beziehungen nach dem Speichern
+        // Clears list of selected relationships after saving
         this.selectedRelationships = [];
       } catch (error) {
-        console.error("Error saving relationships:", error); // Fehlermeldung beim Speichern
+        console.error("Error saving relationships:", error); // Error message when saving
       }
     },
 
-    // Setzt die Auswahl zurück
+    // Resets selection
     resetSelections() {
       this.selectedPersons = [];
       this.dialog = false;
@@ -314,32 +349,32 @@ export default {
       this.personSelectionState = "child";
     },
 
-    // Formatierung für Datum, Geschlecht und Stadt
+    // Formatting for date, gender and city
     formatDate(dateString) {
-      // Formatierung des Datumsstringst
-      const date = new Date(dateString); // Erstellt ein Datum-Objekt aus dem übergebenen String
-      const day = date.getDate(); // Holt den Tag des Monats
-      const month = date.getMonth() + 1; // Holt den Monat
-      const year = date.getFullYear(); // Holt das Jahr
-      return `${day}/${month}/${year}`; // Gibt das Datum im Format Tag/Monat/Jahr zurück
+      // Formatting of date string
+      const date = new Date(dateString); // Creates date object from passed string
+      const day = date.getDate(); // Gets day of month
+      const month = date.getMonth() + 1; // Gets month
+      const year = date.getFullYear(); // Gets year
+      return `${day}/${month}/${year}`; // Returns date in Day/Month/Year format
     },
     formatGender(gender) {
-      // Formatierung des Geschlechts für die Anzeige
-      return gender === "M" ? "Männlich" : "Weiblich"; // Gibt 'Männlich' zurück, wenn das Geschlecht 'M' ist, sonst 'Weiblich'
+      // Formatting of gender for display
+      return gender === "M" ? "Male" : "Female"; // Returns 'Male' if gender is 'M', otherwise 'Female'
     },
     formatCity(city) {
-      // Formatierung der Stadt für die Anzeige
-      return city || "N/A"; // Gibt den Stadtnamen zurück, falls vorhanden, sonst "N/A"
+      // Formatting of city for display
+      return city || "N/A"; // Returns city name if available, otherwise "N/A"
     },
-    selectMutter() {
-      // Methode zum Auswählen der Beziehung 'Mutter'
-      this.selectedRelationshipType = "Mutter"; // Setzt den Beziehungstyp auf 'Mutter'
-      this.dialog = false; // Schließt den Dialog
+    selectMother() {
+      // Method for selecting 'Mother' relationship
+      this.selectedRelationshipType = "Mother"; // Sets relationship type to 'Mother'
+      this.dialog = false; // Closes dialog
     },
-    selectVater() {
-      // Methode zum Auswählen der Beziehung 'Vater'
-      this.selectedRelationshipType = "Vater"; // Setzt den Beziehungstyp auf 'Vater'
-      this.dialog = false; // Schließt den Dialog
+    selectFather() {
+      // Method for selecting 'Father' relationship
+      this.selectedRelationshipType = "Father"; // Sets relationship type to 'Father'
+      this.dialog = false; // Closes dialog
     },
   },
 };
@@ -369,11 +404,11 @@ export default {
   font-size: 12px;
 }
 
-/* Media Queries für die Anpassung des Layouts auf kleineren Bildschirmen */
+/* Media Queries for adjusting layout on smaller screens */
 @media only screen and (max-width: 600px) {
   .v-card-title,
   .v-card-subtitle {
-    font-size: 16px; /* Verringert die Schriftgröße für Kartenüberschriften und -untertitel auf 16px auf Bildschirmen kleiner als 600px Breite */
+    font-size: 16px; /* Reduces font size for card titles and subtitles on screens smaller than 600px width */
   }
 }
 </style>

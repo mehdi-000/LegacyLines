@@ -3,9 +3,9 @@
   <div>
     <v-row class="px-8 my-40">
       <v-col>
-        <h1>Seite nicht gefunden</h1>
-        <p>Überprüfe die URL</p>
-        <v-btn to="/" class="mt-4">kehre zur Startseite zurück </v-btn>
+        <h1>Page not found</h1>
+        <p>Check the URL</p>
+        <v-btn to="/" class="mt-4">Return to homepage</v-btn>
       </v-col>
     </v-row>
     <v-row>
