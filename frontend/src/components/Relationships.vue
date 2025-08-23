@@ -54,13 +54,13 @@
                 block
                 color="secondary"
                 class="mb-2"
-                @click="selectRelationshipType('Mother')"
+                @click="selectRelationshipType('Mutter')"
                 >Mother</v-btn
               >
               <v-btn
                 block
                 color="secondary"
-                @click="selectRelationshipType('Father')"
+                @click="selectRelationshipType('Vater')"
                 >Father</v-btn
               >
             </v-card-text>
